@@ -73,7 +73,7 @@ function App() {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
-        <p>Cargando Panel de Monitoreo de Ataques...</p>
+        <p>Cargando Panel de Monitoreo de Fraude...</p>
       </div>
     );
   }
@@ -103,17 +103,17 @@ function App() {
     Count: score_distribution.back[idx] || 0
   }));
 
-  // 2. Gráfico 100% Stacked para Porcentaje Diario de Fotocopias
+  // 2. Gráfico 100% Stacked para Porcentaje Diario de Fraudes
   const dailyPercentages = daily_predictions.map(day => {
     const totalImage = day.front + day.back;
-    const photocopy = day.photocopy;
+    const photocopy = day.photocopy; // representa anomalías/fraude
     const real = Math.max(0, totalImage - photocopy);
     const photocopyPct = totalImage > 0 ? (photocopy / totalImage) * 100 : 0;
     const realPct = totalImage > 0 ? (real / totalImage) * 100 : 100;
     return {
       date: day.date,
-      Real: parseFloat(realPct.toFixed(2)),
-      'Color Photocopy': parseFloat(photocopyPct.toFixed(2))
+      'Real / Aprobada': parseFloat(realPct.toFixed(2)),
+      'Sospecha / Fraude': parseFloat(photocopyPct.toFixed(2))
     };
   });
 
@@ -124,8 +124,8 @@ function App() {
     const real = Math.max(0, totalImage - photocopy);
     return {
       date: day.date,
-      Real: real,
-      'Color Photocopy': photocopy
+      'Real / Aprobada': real,
+      'Sospecha / Fraude': photocopy
     };
   });
 
@@ -147,14 +147,14 @@ function App() {
           timestamp: log.timestamp,
           phone: phone,
           validation_id: log.message_id ? log.message_id.substring(6, 26) + '...' : `VLD-${log.timestamp.substring(11, 19)}`,
-          predicted_front: log.is_photocopy ? 'COLOR_PHOTOCOPY' : 'REAL',
+          predicted_front: log.is_photocopy ? 'FRAUD' : 'REAL',
           predicted_reverse: '-',
           predicted_color_photocopy: log.is_photocopy ? 1 : 0,
           model_version: 'COL-CO-5'
         };
       } else if (log.node === 'process_back') {
         if (groups[phone]) {
-          groups[phone].predicted_reverse = log.is_photocopy ? 'COLOR_PHOTOCOPY' : 'REAL';
+          groups[phone].predicted_reverse = log.is_photocopy ? 'FRAUD' : 'REAL';
           if (log.is_photocopy) {
             groups[phone].predicted_color_photocopy = 1;
           }
@@ -164,7 +164,7 @@ function App() {
             phone: phone,
             validation_id: log.message_id ? log.message_id.substring(6, 26) + '...' : `VLD-${log.timestamp.substring(11, 19)}`,
             predicted_front: '-',
-            predicted_reverse: log.is_photocopy ? 'COLOR_PHOTOCOPY' : 'REAL',
+            predicted_reverse: log.is_photocopy ? 'FRAUD' : 'REAL',
             predicted_color_photocopy: log.is_photocopy ? 1 : 0,
             model_version: 'COL-CO-5'
           };
@@ -190,7 +190,7 @@ function App() {
       <header className="app-header">
         <div className="brand-section">
           <h1 className="brand-logo">NeoAstrum</h1>
-          <span className="brand-tagline">Panel de Monitoreo de Ataques (Copias de Cédula)</span>
+          <span className="brand-tagline">Panel de Monitoreo de Fraude & Validación de Cédulas</span>
         </div>
         <button 
           className={`refresh-button ${refreshing ? 'spinning' : ''}`} 
@@ -202,48 +202,48 @@ function App() {
         </button>
       </header>
 
-      {/* KPIs Superiores (Alineación con Elastic) */}
+      {/* KPIs Superiores */}
       <section className="kpi-grid">
         <div className="glass-panel kpi-card total">
           <div className="kpi-header">
-            <span className="kpi-title">Total validations with color photocopy active</span>
+            <span className="kpi-title">Total Validations (Active Engine)</span>
             <div className="kpi-icon-wrapper">
               <Activity size={20} />
             </div>
           </div>
           <div className="kpi-value">{kpis.total_validations}</div>
-          <span className="kpi-desc">Eventos totales procesados</span>
+          <span className="kpi-desc">Eventos totales en el webhook</span>
         </div>
 
         <div className="glass-panel kpi-card real">
           <div className="kpi-header">
-            <span className="kpi-title">Predicted Real</span>
+            <span className="kpi-title">Predicted Real / Authentic</span>
             <div className="kpi-icon-wrapper">
               <CheckCircle size={20} />
             </div>
           </div>
           <div className="kpi-value">{kpis.predicted_real}</div>
-          <span className="kpi-desc">Documentos válidos verificados</span>
+          <span className="kpi-desc">Documentos válidos aprobados</span>
         </div>
 
         <div className="glass-panel kpi-card photocopy">
           <div className="kpi-header">
-            <span className="kpi-title">Predicted Color Photocopy</span>
+            <span className="kpi-title">Predicted Fraud / Fake</span>
             <div className="kpi-icon-wrapper">
               <AlertTriangle size={20} />
             </div>
           </div>
           <div className="kpi-value">{kpis.predicted_photocopy}</div>
-          <span className="kpi-desc">Intentos de fotocopias o fraudes</span>
+          <span className="kpi-desc">Ataques o sospechas de fraude detectadas</span>
         </div>
 
         <div className="glass-panel kpi-card percentage" style={{ display: 'flex', flexDirection: 'row', gap: '16px', gridColumn: 'span 1' }}>
           <div style={{ flex: 1 }}>
-            <div className="kpi-title" style={{ fontSize: '11px', marginBottom: '8px' }}>Percentage of Real Predictions (%)</div>
+            <div className="kpi-title" style={{ fontSize: '11px', marginBottom: '8px' }}>Percentage of Real (%)</div>
             <div className="kpi-value" style={{ fontSize: '24px', color: 'var(--success)' }}>{kpis.real_percentage}%</div>
           </div>
           <div style={{ flex: 1, borderLeft: '1px solid var(--border)', paddingLeft: '16px' }}>
-            <div className="kpi-title" style={{ fontSize: '11px', marginBottom: '8px' }}>Percentage of Photocopy Predictions (%)</div>
+            <div className="kpi-title" style={{ fontSize: '11px', marginBottom: '8px' }}>Percentage of Fraud (%)</div>
             <div className="kpi-value" style={{ fontSize: '24px', color: 'var(--danger)' }}>{kpis.photocopy_percentage}%</div>
           </div>
         </div>
@@ -256,7 +256,7 @@ function App() {
           <div className="chart-header">
             <div>
               <h3 className="chart-title">Front Prediction Score Distribution</h3>
-              <p className="chart-subtitle">Prediction Score [0 = Real | 1 = Color Photocopy]</p>
+              <p className="chart-subtitle">Prediction Score [0 = Real | 1 = Fraud / Fake]</p>
             </div>
           </div>
           <div className="chart-wrapper">
@@ -280,7 +280,7 @@ function App() {
           <div className="chart-header">
             <div>
               <h3 className="chart-title">Reverse Prediction Score Distribution</h3>
-              <p className="chart-subtitle">Prediction Score [0 = Real | 1 = Color Photocopy]</p>
+              <p className="chart-subtitle">Prediction Score [0 = Real | 1 = Fraud / Fake]</p>
             </div>
           </div>
           <div className="chart-wrapper">
@@ -300,13 +300,13 @@ function App() {
         </div>
       </section>
 
-      {/* Gráficos de Volumen Diario (Daily predictions and daily percentages) */}
+      {/* Gráficos de Volumen Diario */}
       <section className="charts-grid">
-        {/* Daily Number of Color Photocopy Predictions */}
+        {/* Daily Number of Fraud Predictions */}
         <div className="glass-panel chart-card">
           <div className="chart-header">
             <div>
-              <h3 className="chart-title">Daily Number of Color Photocopy Predictions</h3>
+              <h3 className="chart-title">Daily Number of Fraud Predictions</h3>
               <p className="chart-subtitle">Volumen de validaciones diarias clasificadas</p>
             </div>
           </div>
@@ -318,18 +318,18 @@ function App() {
                 <YAxis stroke="#64748b" fontSize={10} />
                 <Tooltip contentStyle={{ backgroundColor: 'rgba(10, 12, 18, 0.95)', borderColor: 'rgba(255,255,255,0.08)' }} />
                 <Legend verticalAlign="top" height={36} iconType="circle" />
-                <Area name="Real" type="monotone" dataKey="Real" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
-                <Area name="Color Photocopy" type="monotone" dataKey="Color Photocopy" stackId="1" stroke="#f43f5e" fill="#f43f5e" fillOpacity={0.6} />
+                <Area name="Real / Aprobada" type="monotone" dataKey="Real / Aprobada" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
+                <Area name="Sospecha / Fraude" type="monotone" dataKey="Sospecha / Fraude" stackId="1" stroke="#f43f5e" fill="#f43f5e" fillOpacity={0.6} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Daily Percentage of Color Photocopy Detections */}
+        {/* Daily Percentage of Fraud Detections */}
         <div className="glass-panel chart-card">
           <div className="chart-header">
             <div>
-              <h3 className="chart-title">Daily Percentage of Color Photocopy Detections</h3>
+              <h3 className="chart-title">Daily Percentage of Fraud Detections</h3>
               <p className="chart-subtitle">Proporción porcentual acumulada por día</p>
             </div>
           </div>
@@ -341,8 +341,8 @@ function App() {
                 <YAxis stroke="#64748b" fontSize={10} tickFormatter={(tick) => `${tick}%`} />
                 <Tooltip contentStyle={{ backgroundColor: 'rgba(10, 12, 18, 0.95)', borderColor: 'rgba(255,255,255,0.08)' }} />
                 <Legend verticalAlign="top" height={36} iconType="circle" />
-                <Area name="Real" type="monotone" dataKey="Real" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
-                <Area name="Color Photocopy" type="monotone" dataKey="Color Photocopy" stackId="1" stroke="#f43f5e" fill="#f43f5e" fillOpacity={0.6} />
+                <Area name="Real / Aprobada" type="monotone" dataKey="Real / Aprobada" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
+                <Area name="Sospecha / Fraude" type="monotone" dataKey="Sospecha / Fraude" stackId="1" stroke="#f43f5e" fill="#f43f5e" fillOpacity={0.6} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -382,11 +382,11 @@ function App() {
         </div>
       </section>
 
-      {/* Historial de Validaciones Consolidado (Summary of color photocopy detection) */}
+      {/* Historial de Validaciones Consolidado */}
       <section className="glass-panel table-card">
         <header className="table-header">
           <div className="table-title-area">
-            <h3 className="chart-title">Summary of color photocopy detection</h3>
+            <h3 className="chart-title">Summary of Document Validation</h3>
             <p className="chart-subtitle">Historial consolidado de validaciones por usuario en WhatsApp</p>
           </div>
           <div className="table-filter-area">
@@ -397,7 +397,7 @@ function App() {
             >
               <option value="all">Todos los Veredictos</option>
               <option value="real">Real (Aprobadas)</option>
-              <option value="photocopy">Ataques / Copias</option>
+              <option value="photocopy">Sospecha / Fraude</option>
             </select>
           </div>
         </header>
@@ -412,7 +412,7 @@ function App() {
                 <th>Validation ID</th>
                 <th>Predicted Front</th>
                 <th>Predicted Reverse</th>
-                <th>Predicted Color Photocopy</th>
+                <th>Fraud Detected</th>
               </tr>
             </thead>
             <tbody>
