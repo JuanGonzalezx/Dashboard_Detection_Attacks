@@ -189,7 +189,7 @@ function App() {
       {/* Header */}
       <header className="app-header">
         <div className="brand-section">
-          <h1 className="brand-logo">NeoAstrum</h1>
+          <h1 className="brand-logo">Dashboard de Detección de Ataques</h1>
           <span className="brand-tagline">Panel de Monitoreo de Fraude & Validación de Cédulas</span>
         </div>
         <button 

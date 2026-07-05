@@ -1,4 +1,4 @@
-/* Estilos de la Aplicación NeoAstrum */
+/* Estilos de la Aplicación Dashboard de Detección de Ataques */
 
 .app-container {
   padding: 40px;
@@ -65,8 +65,13 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* KPI Cards Grid */
@@ -94,10 +99,21 @@
   height: 4px;
 }
 
-.kpi-card.total::before { background: var(--info); }
-.kpi-card.real::before { background: var(--success); }
-.kpi-card.photocopy::before { background: var(--danger); }
-.kpi-card.percentage::before { background: var(--primary); }
+.kpi-card.total::before {
+  background: var(--info);
+}
+
+.kpi-card.real::before {
+  background: var(--success);
+}
+
+.kpi-card.photocopy::before {
+  background: var(--danger);
+}
+
+.kpi-card.percentage::before {
+  background: var(--primary);
+}
 
 .kpi-header {
   display: flex;
@@ -121,10 +137,25 @@
   justify-content: center;
 }
 
-.kpi-card.total .kpi-icon-wrapper { background: var(--info-glow); color: var(--info); }
-.kpi-card.real .kpi-icon-wrapper { background: var(--success-glow); color: var(--success); }
-.kpi-card.photocopy .kpi-icon-wrapper { background: var(--danger-glow); color: var(--danger); }
-.kpi-card.percentage .kpi-icon-wrapper { background: var(--primary-glow); color: var(--primary); }
+.kpi-card.total .kpi-icon-wrapper {
+  background: var(--info-glow);
+  color: var(--info);
+}
+
+.kpi-card.real .kpi-icon-wrapper {
+  background: var(--success-glow);
+  color: var(--success);
+}
+
+.kpi-card.photocopy .kpi-icon-wrapper {
+  background: var(--danger-glow);
+  color: var(--danger);
+}
+
+.kpi-card.percentage .kpi-icon-wrapper {
+  background: var(--primary-glow);
+  color: var(--primary);
+}
 
 .kpi-value {
   font-family: var(--font-heading);
@@ -195,8 +226,15 @@
   gap: 6px;
 }
 
-.latency-badge.aws { background: var(--info-glow); color: var(--info); }
-.latency-badge.gemini { background: var(--primary-glow); color: var(--primary); }
+.latency-badge.aws {
+  background: var(--info-glow);
+  color: var(--info);
+}
+
+.latency-badge.gemini {
+  background: var(--primary-glow);
+  color: var(--primary);
+}
 
 /* Custom Recharts Tooltip */
 .custom-tooltip {
@@ -313,13 +351,35 @@
   font-weight: 600;
 }
 
-.badge.real { background: var(--success-glow); color: var(--success); }
-.badge.photocopy { background: var(--danger-glow); color: var(--danger); }
+.badge.real {
+  background: var(--success-glow);
+  color: var(--success);
+}
 
-.badge.node-front { background: var(--info-glow); color: var(--info); }
-.badge.node-back { background: var(--primary-glow); color: var(--primary); }
-.badge.node-reset { background: var(--warning-glow); color: var(--warning); }
-.badge.node-unsupported { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+.badge.photocopy {
+  background: var(--danger-glow);
+  color: var(--danger);
+}
+
+.badge.node-front {
+  background: var(--info-glow);
+  color: var(--info);
+}
+
+.badge.node-back {
+  background: var(--primary-glow);
+  color: var(--primary);
+}
+
+.badge.node-reset {
+  background: var(--warning-glow);
+  color: var(--warning);
+}
+
+.badge.node-unsupported {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+}
 
 .wamid-text {
   font-family: var(--font-mono);
@@ -342,7 +402,8 @@
 }
 
 /* Loading & Error States */
-.loading-container, .error-container {
+.loading-container,
+.error-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -370,6 +431,7 @@
   .kpi-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .charts-grid {
     grid-template-columns: 1fr;
   }
@@ -379,11 +441,13 @@
   .app-container {
     padding: 20px;
   }
+
   .app-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
   }
+
   .kpi-grid {
     grid-template-columns: 1fr;
   }

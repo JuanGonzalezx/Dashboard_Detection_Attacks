@@ -1,4 +1,4 @@
-/* Sistema de diseño global para NeoAstrum Dashboard */
+/* Sistema de diseño global para Dashboard de Detección de Ataques Dashboard */
 :root {
   /* Colores principales */
   --bg-main: #06070b;
@@ -7,7 +7,7 @@
   --bg-card-hover: rgba(25, 30, 48, 0.7);
   --border: rgba(255, 255, 255, 0.07);
   --border-hover: rgba(255, 255, 255, 0.15);
-  
+
   /* Estados / Acentos */
   --primary: #8b5cf6;
   --primary-glow: rgba(139, 92, 246, 0.2);
@@ -24,7 +24,7 @@
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  
+
   /* Fuentes */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-heading: 'Outfit', sans-serif;
@@ -92,6 +92,7 @@ body {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -99,9 +100,12 @@ body {
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.6;
   }
+
   50% {
     opacity: 0.9;
   }
